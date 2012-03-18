@@ -72,6 +72,16 @@ intersperse _ [] = []
 --     the tree Empty has height zero; Node "x" Empty Empty has height one;
 --     Node "x" Empty (Node "y" Empty Empty) has height two; and so on. 
 
+data Tree a = Node a (Tree a) (Tree a)
+            | Empty
+              deriving (Show)
+
+height :: Tree a -> Int
+height Empty = 0
+height (Node a t1 t2) 
+       | height t1 >= height t2 = 1 + height t1
+       | otherwise = 1 + height t2
+
 -- 9.  Consider three two-dimensional points a, b, and c. If we look at the
 --     angle formed by the line segment from a to b and the line segment from
 --     b to c, it either turns left, turns right, or forms a straight line.
