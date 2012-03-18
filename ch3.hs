@@ -88,8 +88,29 @@ height (Node a t1 t2)
 --     Define a Direction data type that lets you represent these 
 --     possibilities. 
 
+data Direction = Straight
+               | Left
+               | Right
+                 deriving (Show)
+
 -- 10.  Write a function that calculates the turn made by three 2D points and
 --      returns a Direction. 
+
+data Point = Point Int Int
+             deriving (Show)
+
+slope :: Point -> Point -> Float
+slope (Point x1 y1) (Point x2 y2) = 
+    fromIntegral (y1 - y2) / fromIntegral (x1 - x2)
+
+turn :: Point -> Point -> Point -> Direction
+turn p1 p2 p3 
+             | m1 < m2 = Main.Left
+             | m1 > m2 = Main.Right
+             | otherwise = Straight
+             where
+               m1 = slope p1 p2
+               m2 = slope p2 p3
 
 -- 11.  Define a function that takes a list of 2D points and computes the 
 --      direction of each successive triple. Given a list of points 
@@ -97,7 +118,30 @@ height (Node a t1 t2)
 --      then the turn made by [b,c,d], then [c,d,e]. Your function should 
 --      return a list of Direction.
 
+turns :: [Point] -> [Direction]
+turns (p1:p2:p3:ps) = (turn p1 p2 p3) : turns (p2:p3:ps)
+turns _ = []
+
 -- 12.  Using the code from the preceding three exercises, implement Graham's
 --      scan algorithm for the convex hull of a set of 2D points. You can find 
 --      good description of what a convex hull. is, and how the Graham scan 
 --      algorithm should work, on Wikipedia. 
+--  1. identify point with lowest y axis (P)
+--  2. sort all points by cosine of point with P and x axis
+--  3. navigate down the list, if is a right turn, discard points
+--    a. at end, all points should have left turns to each other
+--  4. This is the convex hull
+
+lowestY :: Point -> Point -> Point
+lowestY (Point x1 y1) (Point x2 y2)
+  | y1 < y2 = (Point x1 y1)
+  | otherwise = (Point x2 y2)
+
+bottomOfHull :: [Point] -> Point
+bottomOfHull (point:[]) = point
+bottomOfHull (p1:p2:ps) = bottomOfHull' (lowestY p1 p2) ps
+  where 
+    bottomOfHull' b [] = b
+    bottomOfHull' b (p:ps) = bottomOfHull' (lowestY b p) ps
+
+-- TODO 2,3,4
