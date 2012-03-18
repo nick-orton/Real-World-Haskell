@@ -1,4 +1,4 @@
-import Data.List
+import Data.List (sortBy)
 import Data.Ord
 
 -- 1.  Write a function that computes the number of elements in a list. To 
@@ -49,7 +49,11 @@ sortLists listOfLists = sortBy compareLengths listOfLists
 --     value. 
 
 intersperse :: a -> [[a]] -> [a]
-intersperse _ _ = error "not yet implemented"
+intersperse s (x:y:xs) = x ++ (s : y) ++ (intersperse s xs)
+intersperse _ (x:[]) = x
+intersperse _ [] = []
+
+--intersperse _ _ = error "not yet implemented"
 
 --     ghci> :load Intersperse
 --     [1 of 1] Compiling Main             ( Intersperse.hs, interpreted )
