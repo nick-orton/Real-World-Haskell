@@ -150,5 +150,10 @@ vectorCosine origin point = (fromIntegral adjacent ) / hypotenuse
     (Point x1 y1) = origin
     adjacent = x2 - x1
     hypotenuse = sqrt (fromIntegral (adjacent^2 + (y2 - y1)^2))
--- TODO 3,4
 
+sortByCosine origin points = 
+  sortBy (\p1 p2 -> compare (vcos p1) (vcos p2)) points
+  where
+    vcos = vectorCosine origin
+
+-- TODO 3,4
