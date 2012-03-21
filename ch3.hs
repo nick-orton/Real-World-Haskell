@@ -1,21 +1,21 @@
 import Data.List (sortBy)
 import Data.Ord
 
--- 1.  Write a function that computes the number of elements in a list. To 
---     test it, ensure that it gives the same answers as the standard length 
+-- 1.  Write a function that computes the number of elements in a list. To
+--     test it, ensure that it gives the same answers as the standard length
 --     function.
 -- 2.  Add a type signature for your function to your source file. To test it,
---     load the source file into ghci again. 
+--     load the source file into ghci again.
 
 
 myLength :: [a] -> Integer
 myLength [] = 0
 myLength (x:xs) = 1 + myLength xs
 
--- 3.  Write a function that computes the mean of a list, i.e. the sum of all 
+-- 3.  Write a function that computes the mean of a list, i.e. the sum of all
 --     elements in the list divided by its length. (You may need to use the
 --     fromIntegral function to convert the length of the list from an integer
---     into a floating point number.) 
+--     into a floating point number.)
 
 mySum :: [Int] -> Int
 mySum [] = 0
@@ -25,8 +25,8 @@ mean :: Fractional a => [Int] -> a
 mean list = fromIntegral (mySum list) / fromIntegral (length list)
 
 -- 4.  Turn a list into a palindrome, i.e. it should read the same both
---     backwards and forwards. For example, given the list [1,2,3], your 
---     function should return [1,2,3,3,2,1]. 
+--     backwards and forwards. For example, given the list [1,2,3], your
+--     function should return [1,2,3,3,2,1].
 
 consReverse list = list ++ reverse list
 
@@ -36,7 +36,7 @@ isPalendrome list = list == reverse list
 
 -- 6.  Create a function that sorts a list of lists based on the length of each
 --     sublist. (You may want to look at the sortBy function from the Data.List
---     module.) 
+--     module.)
 
 compareLengths l1 l2
   | length l1 < length l2 = LT
@@ -46,7 +46,7 @@ compareLengths l1 l2
 sortLists listOfLists = sortBy compareLengths listOfLists
 
 -- 7.  Define a function that joins a list of lists together using a separator
---     value. 
+--     value.
 
 intersperse :: a -> [[a]] -> [a]
 intersperse s (x:y:xs) = x ++ (s : y) ++ (intersperse s xs)
@@ -70,7 +70,7 @@ intersperse _ [] = []
 --     write a function that will determine the height of the tree. The height
 --     is the largest number of hops from the root to an Empty. For example,
 --     the tree Empty has height zero; Node "x" Empty Empty has height one;
---     Node "x" Empty (Node "y" Empty Empty) has height two; and so on. 
+--     Node "x" Empty (Node "y" Empty Empty) has height two; and so on.
 
 data Tree a = Node a (Tree a) (Tree a)
             | Empty
@@ -78,15 +78,15 @@ data Tree a = Node a (Tree a) (Tree a)
 
 height :: Tree a -> Int
 height Empty = 0
-height (Node a t1 t2) 
+height (Node a t1 t2)
        | height t1 >= height t2 = 1 + height t1
        | otherwise = 1 + height t2
 
 -- 9.  Consider three two-dimensional points a, b, and c. If we look at the
 --     angle formed by the line segment from a to b and the line segment from
 --     b to c, it either turns left, turns right, or forms a straight line.
---     Define a Direction data type that lets you represent these 
---     possibilities. 
+--     Define a Direction data type that lets you represent these
+--     possibilities.
 
 data Direction = Straight
                | Left
@@ -94,17 +94,17 @@ data Direction = Straight
                  deriving (Show)
 
 -- 10.  Write a function that calculates the turn made by three 2D points and
---      returns a Direction. 
+--      returns a Direction.
 
 data Point = Point Int Int
              deriving (Show)
 
 slope :: Point -> Point -> Float
-slope (Point x1 y1) (Point x2 y2) = 
+slope (Point x1 y1) (Point x2 y2) =
     fromIntegral (y1 - y2) / fromIntegral (x1 - x2)
 
 turn :: Point -> Point -> Point -> Direction
-turn p1 p2 p3 
+turn p1 p2 p3
              | m1 < m2 = Main.Left
              | m1 > m2 = Main.Right
              | otherwise = Straight
@@ -112,10 +112,10 @@ turn p1 p2 p3
                m1 = slope p1 p2
                m2 = slope p2 p3
 
--- 11.  Define a function that takes a list of 2D points and computes the 
---      direction of each successive triple. Given a list of points 
+-- 11.  Define a function that takes a list of 2D points and computes the
+--      direction of each successive triple. Given a list of points
 --      [a,b,c,d,e], it should begin by computing the turn made by [a,b,c],
---      then the turn made by [b,c,d], then [c,d,e]. Your function should 
+--      then the turn made by [b,c,d], then [c,d,e]. Your function should
 --      return a list of Direction.
 
 turns :: [Point] -> [Direction]
@@ -123,9 +123,9 @@ turns (p1:p2:p3:ps) = (turn p1 p2 p3) : turns (p2:p3:ps)
 turns _ = []
 
 -- 12.  Using the code from the preceding three exercises, implement Graham's
---      scan algorithm for the convex hull of a set of 2D points. You can find 
---      good description of what a convex hull. is, and how the Graham scan 
---      algorithm should work, on Wikipedia. 
+--      scan algorithm for the convex hull of a set of 2D points. You can find
+--      good description of what a convex hull. is, and how the Graham scan
+--      algorithm should work, on Wikipedia.
 --  1. identify point with lowest y axis (P)
 --  2. sort all points by cosine of point with P and x axis
 --  3. navigate down the list, if is a right turn, discard points
@@ -140,8 +140,15 @@ lowestY (Point x1 y1) (Point x2 y2)
 bottomOfHull :: [Point] -> Point
 bottomOfHull (point:[]) = point
 bottomOfHull (p1:p2:ps) = bottomOfHull' (lowestY p1 p2) ps
-  where 
+  where
     bottomOfHull' b [] = b
     bottomOfHull' b (p:ps) = bottomOfHull' (lowestY b p) ps
 
--- TODO 2,3,4
+vectorCosine origin point = (fromIntegral adjacent ) / hypotenuse
+  where
+    (Point x2 y2) = point
+    (Point x1 y1) = origin
+    adjacent = x2 - x1
+    hypotenuse = sqrt (fromIntegral (adjacent^2 + (y2 - y1)^2))
+-- TODO 3,4
+
