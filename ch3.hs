@@ -91,26 +91,34 @@ height (Node a t1 t2)
 data Direction = Straight
                | Left
                | Right
-                 deriving (Show)
+                 deriving (Show, Eq)
 
 -- 10.  Write a function that calculates the turn made by three 2D points and
 --      returns a Direction.
 
 data Point = Point Int Int
-             deriving (Show)
+             deriving (Show,Eq)
 
 slope :: Point -> Point -> Float
 slope (Point x1 y1) (Point x2 y2) =
     fromIntegral (y1 - y2) / fromIntegral (x1 - x2)
 
 turn :: Point -> Point -> Point -> Direction
-turn p1 p2 p3
-             | m1 < m2 = Main.Left
-             | m1 > m2 = Main.Right
-             | otherwise = Straight
-             where
-               m1 = slope p1 p2
-               m2 = slope p2 p3
+turn p1 p2 p3 
+  | 0 == crossproduct = Straight
+  | 0 < crossproduct = Main.Left
+  | otherwise = Main.Right
+  where
+    crossproduct = ((x2 - x1) * (y3 - y1)) - ((y2 - y1) * (x3 - x1))
+    (Point x1 y1) = p1 
+    (Point x2 y2) = p2 
+    (Point x3 y3) = p3 
+--             | m1 < m2 = Main.Left
+--             | m1 > m2 = Main.Right
+--            | otherwise = Straight
+--             where
+--               m1 = slope p1 p2
+--               m2 = slope p2 p3
 
 -- 11.  Define a function that takes a list of 2D points and computes the
 --      direction of each successive triple. Given a list of points
@@ -156,4 +164,31 @@ sortByCosine origin points =
   where
     vcos = vectorCosine origin
 
--- TODO 3,4
+
+onlyRightTurns :: [Point] -> [Point]
+onlyRightTurns [] = []
+onlyRightTurns (p:[]) = [p]
+onlyRightTurns (p1:p2:[]) = [p1,p2]
+onlyRightTurns (p1:p2:p3:ps) 
+  | turn p1 p2 p3 == Main.Left = onlyRightTurns (p1:p3:ps) 
+  | otherwise = p1 : onlyRightTurns (p2:p3:ps)
+
+
+convexHull :: [Point] -> [Point]
+convexHull points = origin : (onlyRightTurns (sortByCosine origin otherPoints))
+  where
+    origin = bottomOfHull points
+    otherPoints = filter (\x -> x /= origin) points
+    
+
+tp1 = (Point 0 0)
+tp2 = (Point 10 10)
+tp3 = (Point 0 20)
+tp4 = (Point (-10) 10)
+tp5 = (Point 5 10)
+
+testPoints = [tp1,tp2,tp3,tp4, tp5]
+
+testOrigin = bottomOfHull testPoints == tp1
+testOtherPoints = filter (\x ->x /= tp1) testPoints == [tp2,tp3,tp4]
+testSortByCosine = sortByCosine tp1 [tp2,tp3,tp4]
