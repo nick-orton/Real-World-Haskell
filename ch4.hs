@@ -27,7 +27,16 @@ safeInit _ = Nothing
 --    element for which the predicate returns False. 
 
 splitWith :: (a -> Bool) -> [a] -> [[a]]
-splitWith = error "not implemented"
+splitWith pred ls = foldr f [[]] ls
+  where
+    f x []
+      | pred x = [[x]]
+      | otherwise = []
+    f x (a:as) 
+      | pred x = ((x:a):as)
+      | null a = (a:as)
+      | otherwise = ([]:a:as)
+
 
 -- 3. Using the command framework from the section called “A simple command 
 --    line framework”, write a program that prints the first word of each 
@@ -41,7 +50,7 @@ splitWith = error "not implemented"
 --    called “Explicit recursion”. 
 
 asInt_fold :: String -> Int
-asInt_fold = error "not implemented"
+asInt_fold = undefined
 
 -- Your function should behave as follows. 
 -- ghci> asInt_fold "101"
@@ -70,7 +79,7 @@ asInt_fold = error "not implemented"
 
 type ErrorMessage = String
 asInt_either :: String -> Either ErrorMessage Int
-asInt_either = error "not implemented"
+asInt_either = undefined
 
 -- ghci> asInt_either "33"
 -- Right 33
