@@ -3,17 +3,24 @@
 --     want to consider using the following types.
 
 safeHead :: [a] -> Maybe a
-safeHead = error "not implemented"
+safeHead (x:xs) = Just x
+safeHead _ = Nothing
 
 safeTail :: [a] -> Maybe [a]
-safeTail = error "not implemented"
+safeTail (x:xs) = Just xs
+safeTail _ = Nothing
 
 safeLast :: [a] -> Maybe a
-safeLast = error "not implemented"
+safeLast (x:[]) = Just x
+safeLast (x:xs) = safeLast xs
+safeLast _ = Nothing
 
 safeInit :: [a] -> Maybe [a]
-safeInit  = error "not implemented"
-
+safeInit (x:[]) = Just []
+safeInit (x:xs) = Just (x:others)
+  where
+    (Just others) = safeInit xs
+safeInit _ = Nothing
 
 -- 2. Write a function splitWith that acts similarly to words, but takes a 
 --    predicate and a list of any type, and splits its input list on every 
