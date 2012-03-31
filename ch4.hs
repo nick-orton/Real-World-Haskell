@@ -90,8 +90,19 @@ asInt_fold' s
 --    Rewrite it to fix this problem.
 
 type ErrorMessage = String
+
 asInt_either :: String -> Either ErrorMessage Int
-asInt_either = undefined
+asInt_either ('-':s) = Right (0 - asInt_either' s)
+asInt_either s 
+  | null s = Left "bad input"
+  | not (all isDigit s) = Left "bad input, not a whole number"
+  | otherwise = Right (asInt_either' s)
+asInt_either' s = t
+  where
+    (_,t) = foldr f (((length s) - 1) ,0) (reverse s)
+    f digit (i,total) 
+      | not (isDigit digit) = error "bad input"
+      | otherwise = ((i - 1),((10^i)* (digitToInt digit)) + total )
 
 -- ghci> asInt_either "33"
 -- Right 33
