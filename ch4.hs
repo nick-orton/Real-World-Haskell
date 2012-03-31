@@ -54,10 +54,14 @@ splitWith pred ls = foldr f [[]] ls
 asInt_fold :: String -> Int
 asInt_fold ('-':s) = 0 - asInt_fold' s
 asInt_fold s = asInt_fold' s
-asInt_fold' s = t
+asInt_fold' s 
+  | null s = error "bad input"
+  | otherwise = t
   where
     (_,t) = foldr f (((length s) - 1) ,0) (reverse s)
-    f digit (i,total) = ((i - 1),((10^i)* (digitToInt digit)) + total )
+    f digit (i,total) 
+      | not (isDigit digit) = error "bad input"
+      | otherwise = ((i - 1),((10^i)* (digitToInt digit)) + total )
 
 
 -- Your function should behave as follows. 
