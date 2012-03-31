@@ -114,6 +114,8 @@ asInt_either' s = t
 --      concat :: [[a]] -> [a]
 -- Write your own definition of concat using foldr. 
 
+myConcat :: [[a]] -> [a]
+myConcat l = foldr (++) [] l
 -- 8. Write your own definition of the standard takeWhile function, first using
 --    explicit recursion, then foldr.
 
