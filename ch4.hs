@@ -1,3 +1,5 @@
+import Data.Char
+
 -- 1.  Write your own “safe” definitions of the standard partial list 
 --     functions, but make sure that yours never fail. As a hint, you might 
 --     want to consider using the following types.
@@ -50,7 +52,13 @@ splitWith pred ls = foldr f [[]] ls
 --    called “Explicit recursion”. 
 
 asInt_fold :: String -> Int
-asInt_fold = undefined
+asInt_fold ('-':s) = 0 - asInt_fold' s
+asInt_fold s = asInt_fold' s
+asInt_fold' s = t
+  where
+    (_,t) = foldr f (((length s) - 1) ,0) (reverse s)
+    f digit (i,total) = ((i - 1),((10^i)* (digitToInt digit)) + total )
+
 
 -- Your function should behave as follows. 
 -- ghci> asInt_fold "101"
