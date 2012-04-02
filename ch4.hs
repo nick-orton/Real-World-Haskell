@@ -120,6 +120,13 @@ myConcat l = foldr (++) [] l
 -- 8. Write your own definition of the standard takeWhile function, first using
 --    explicit recursion, then foldr.
 
+myTakeWhile :: (a -> Bool) -> [a] -> [a]
+myTakeWhile pred list = foldr f [] list
+  where
+   f x acc 
+     | pred x = x:acc
+     | otherwise = acc
+
 -- 9. The Data.List module defines a function, groupBy, which has the following
 --    type. 
 --      groupBy :: (a -> a -> Bool) -> [a] -> [[a]]
