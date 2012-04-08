@@ -132,7 +132,25 @@ myTakeWhile pred list = foldr f [] list
 --      groupBy :: (a -> a -> Bool) -> [a] -> [[a]]
 --   Use ghci to load the Data.List module and figure out what groupBy does,
 --   then write your own implementation using a fold.
---
+
+myGroupBy :: (a -> a -> Bool) -> [a] -> [[a]]
+myGroupBy _ [] = []
+myGroupBy prd (elem:elems) = reverse resultsList
+    where 
+    (_,resultsList) = foldl f ( elem, [[elem]]) elems
+    f (prev, groups) x
+      | prd prev x = (x, (x:g):gs)
+      | otherwise = (x, [x]:groups)
+      where
+       (g:gs) = groups
+
+testMyGroupBy =
+  (myGroupBy (==) [1,2]) == [[1], [2]]
+  &&
+  (myGroupBy (==) [1,1,2]) == [[1,1], [2]]
+  &&
+  (myGroupBy (==) [1,1,2,2, 1]) == [[1,1], [2,2], [1]]
+
 -- 10. How many of the following Prelude functions can you rewrite using list 
 --     folds?
 --       any 
