@@ -31,9 +31,6 @@ safeInit _ = Nothing
 splitWith :: (a -> Bool) -> [a] -> [[a]]
 splitWith pred ls = foldr f [[]] ls
   where
-    f x []
-      | pred x = [[x]]
-      | otherwise = []
     f x (a:as) 
       | pred x = ((x:a):as)
       | null a = (a:as)
@@ -159,3 +156,32 @@ testMyGroupBy =
 --       unlines 
 --     For those functions where you can use either foldl' or foldr, which is
 --     more appropriate in each case?
+
+myAny :: (a -> Bool) -> [a] -> Bool
+myAny pred elems = foldr f False elems
+  where
+  f e boolAcc 
+    | boolAcc = True
+    | otherwise = pred e
+
+myCycle list = foldr f list [1..]
+  where
+  f _ acc = list ++ acc
+
+myUnlines :: [String] -> String
+myUnlines strings = foldr f "" strings
+  where
+  f string acc = string ++ "\n" ++ acc
+  
+
+-- words see #2
+--
+
+testProb10 =
+  myAny (== 3) [1,2,3]
+  &&
+  not (myAny (== 3) [1,2,2])
+  &&
+  take 10 (myCycle [1,2,3]) == [1,2,3,1,2,3,1,2,3,1]
+  && 
+  myUnlines ["a","b"] == "a\nb\n"
